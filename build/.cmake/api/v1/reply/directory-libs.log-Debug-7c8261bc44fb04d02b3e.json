@@ -1,0 +1,215 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"boost_install",
+			"boost_install_target"
+		],
+		"files" : 
+		[
+			"tools/cmake/include/BoostInstall.cmake",
+			"libs/log/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 644,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 457,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 463,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 268,
+				"parent" : 3
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 287,
+				"parent" : 3
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 393,
+				"parent" : 3
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 422,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 463,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 268,
+				"parent" : 8
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 287,
+				"parent" : 8
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 393,
+				"parent" : 8
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 422,
+				"parent" : 8
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				{
+					"from" : "libs/log/include",
+					"to" : "."
+				}
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib64",
+			"paths" : 
+			[
+				"stage/lib/libboost_log.a"
+			],
+			"targetId" : "boost_log::@23fa33b5262128a4ad76",
+			"targetIndex" : 15,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_log-1.83.0",
+			"exportName" : "boost_log-targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "boost_log::@23fa33b5262128a4ad76",
+					"index" : 15
+				}
+			],
+			"paths" : 
+			[
+				"libs/log/CMakeFiles/Export/62b519410d9aec5b551db629e072fcb9/boost_log-targets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_log-1.83.0",
+			"paths" : 
+			[
+				"build/libs/log/tmpinst/boost_log-config.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_log-1.83.0",
+			"paths" : 
+			[
+				"build/libs/log/tmpinst/boost_log-config-version.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 9,
+			"component" : "Unspecified",
+			"destination" : "lib64",
+			"paths" : 
+			[
+				"stage/lib/libboost_log_setup.a"
+			],
+			"targetId" : "boost_log_setup::@23fa33b5262128a4ad76",
+			"targetIndex" : 16,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 10,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_log_setup-1.83.0",
+			"exportName" : "boost_log_setup-targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "boost_log_setup::@23fa33b5262128a4ad76",
+					"index" : 16
+				}
+			],
+			"paths" : 
+			[
+				"libs/log/CMakeFiles/Export/67c96697cce0c4204f423800cf78a199/boost_log_setup-targets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 11,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_log_setup-1.83.0",
+			"paths" : 
+			[
+				"build/libs/log/tmpinst/boost_log_setup-config.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 12,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_log_setup-1.83.0",
+			"paths" : 
+			[
+				"build/libs/log/tmpinst/boost_log_setup-config-version.cmake"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "libs/log",
+		"source" : "libs/log"
+	}
+}

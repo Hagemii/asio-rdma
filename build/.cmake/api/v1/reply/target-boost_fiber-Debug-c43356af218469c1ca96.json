@@ -1,0 +1,380 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "stage/lib/libboost_fiber.a"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"install",
+			"boost_install_target",
+			"boost_install",
+			"target_link_libraries",
+			"target_compile_definitions",
+			"set_target_properties",
+			"__boost_install_update_include_directory"
+		],
+		"files" : 
+		[
+			"libs/fiber/CMakeLists.txt",
+			"tools/cmake/include/BoostInstall.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 26,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 123,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 463,
+				"parent" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 268,
+				"parent" : 3
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 49,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 62,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 70,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 1,
+				"line" : 228,
+				"parent" : 3
+			},
+			{
+				"command" : 6,
+				"file" : 1,
+				"line" : 187,
+				"parent" : 8
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-fvisibility=hidden -fvisibility-inlines-hidden"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 5,
+					"define" : "BOOST_CONTEXT_EXPORT="
+				},
+				{
+					"backtrace" : 5,
+					"define" : "BOOST_CONTEXT_NO_LIB"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "BOOST_CONTEXT_STATIC_LINK"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "BOOST_FIBERS_SOURCE"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "BOOST_FIBER_NO_LIB"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "BOOST_FIBER_SOURCE"
+				},
+				{
+					"backtrace" : 7,
+					"define" : "BOOST_FIBER_STATIC_LINK"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 9,
+					"path" : "/root/asio-rdma/libs/fiber/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/assert/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/config/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/context/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/core/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/static_assert/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/throw_exception/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/mp11/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/pool/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/integer/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/type_traits/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/winapi/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/predef/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/smart_ptr/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/move/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/intrusive/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/container_hash/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/root/asio-rdma/libs/describe/include"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 5,
+			"id" : "boost_context::@74a42ee9c30293d10b31"
+		}
+	],
+	"id" : "boost_fiber::@f264384376cb07f610a6",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 4,
+				"path" : "lib64"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "/usr/local"
+		}
+	},
+	"name" : "boost_fiber",
+	"nameOnDisk" : "libboost_fiber.a",
+	"paths" : 
+	{
+		"build" : "libs/fiber",
+		"source" : "libs/fiber"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/algo/algorithm.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/algo/round_robin.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/algo/shared_work.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/algo/work_stealing.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/barrier.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/condition_variable.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/context.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/fiber.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/future.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/mutex.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/properties.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/recursive_mutex.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/recursive_timed_mutex.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/scheduler.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/timed_mutex.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "libs/fiber/src/waker.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

@@ -1,0 +1,215 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"boost_install",
+			"boost_install_target"
+		],
+		"files" : 
+		[
+			"tools/cmake/include/BoostInstall.cmake",
+			"libs/fiber/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 123,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 457,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 463,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 268,
+				"parent" : 3
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 287,
+				"parent" : 3
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 393,
+				"parent" : 3
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 422,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 463,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 268,
+				"parent" : 8
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 287,
+				"parent" : 8
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 393,
+				"parent" : 8
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 422,
+				"parent" : 8
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				{
+					"from" : "libs/fiber/include",
+					"to" : "."
+				}
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib64",
+			"paths" : 
+			[
+				"stage/lib/libboost_fiber.a"
+			],
+			"targetId" : "boost_fiber::@f264384376cb07f610a6",
+			"targetIndex" : 8,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_fiber-1.83.0",
+			"exportName" : "boost_fiber-targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "boost_fiber::@f264384376cb07f610a6",
+					"index" : 8
+				}
+			],
+			"paths" : 
+			[
+				"libs/fiber/CMakeFiles/Export/a67640db75d9f0b8bdf3547f1a83f929/boost_fiber-targets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_fiber-1.83.0",
+			"paths" : 
+			[
+				"build/libs/fiber/tmpinst/boost_fiber-config.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_fiber-1.83.0",
+			"paths" : 
+			[
+				"build/libs/fiber/tmpinst/boost_fiber-config-version.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 9,
+			"component" : "Unspecified",
+			"destination" : "lib64",
+			"paths" : 
+			[
+				"stage/lib/libboost_fiber_numa.a"
+			],
+			"targetId" : "boost_fiber_numa::@f264384376cb07f610a6",
+			"targetIndex" : 9,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 10,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_fiber_numa-1.83.0",
+			"exportName" : "boost_fiber_numa-targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "boost_fiber_numa::@f264384376cb07f610a6",
+					"index" : 9
+				}
+			],
+			"paths" : 
+			[
+				"libs/fiber/CMakeFiles/Export/3179485be84c9fda1373884db30c0f0f/boost_fiber_numa-targets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 11,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_fiber_numa-1.83.0",
+			"paths" : 
+			[
+				"build/libs/fiber/tmpinst/boost_fiber_numa-config.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 12,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_fiber_numa-1.83.0",
+			"paths" : 
+			[
+				"build/libs/fiber/tmpinst/boost_fiber_numa-config-version.cmake"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "libs/fiber",
+		"source" : "libs/fiber"
+	}
+}

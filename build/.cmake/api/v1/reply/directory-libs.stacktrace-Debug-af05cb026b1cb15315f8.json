@@ -1,0 +1,364 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"boost_install",
+			"stacktrace_add_library",
+			"boost_install_target"
+		],
+		"files" : 
+		[
+			"tools/cmake/include/BoostInstall.cmake",
+			"libs/stacktrace/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 95,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 49,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 457,
+				"parent" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 463,
+				"parent" : 2
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 268,
+				"parent" : 4
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 287,
+				"parent" : 4
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 393,
+				"parent" : 4
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 422,
+				"parent" : 4
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 97,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 49,
+				"parent" : 9
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 457,
+				"parent" : 10
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 463,
+				"parent" : 10
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 268,
+				"parent" : 12
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 287,
+				"parent" : 12
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 393,
+				"parent" : 12
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 422,
+				"parent" : 12
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 98,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 49,
+				"parent" : 17
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 457,
+				"parent" : 18
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 463,
+				"parent" : 18
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 268,
+				"parent" : 20
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 287,
+				"parent" : 20
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 393,
+				"parent" : 20
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 422,
+				"parent" : 20
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				{
+					"from" : "libs/stacktrace/include",
+					"to" : "."
+				}
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "lib64",
+			"paths" : 
+			[
+				"stage/lib/libboost_stacktrace_noop.a"
+			],
+			"targetId" : "boost_stacktrace_noop::@700ff2b29570ca9b3e20",
+			"targetIndex" : 24,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_stacktrace_noop-1.83.0",
+			"exportName" : "boost_stacktrace_noop-targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "boost_stacktrace_noop::@700ff2b29570ca9b3e20",
+					"index" : 24
+				}
+			],
+			"paths" : 
+			[
+				"libs/stacktrace/CMakeFiles/Export/15a3fc9c6cc2e7f3f05fb170c22821ad/boost_stacktrace_noop-targets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_stacktrace_noop-1.83.0",
+			"paths" : 
+			[
+				"build/libs/stacktrace/tmpinst/boost_stacktrace_noop-config.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 8,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_stacktrace_noop-1.83.0",
+			"paths" : 
+			[
+				"build/libs/stacktrace/tmpinst/boost_stacktrace_noop-config-version.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 11,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				{
+					"from" : "libs/stacktrace/include",
+					"to" : "."
+				}
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 13,
+			"component" : "Unspecified",
+			"destination" : "lib64",
+			"paths" : 
+			[
+				"stage/lib/libboost_stacktrace_addr2line.a"
+			],
+			"targetId" : "boost_stacktrace_addr2line::@700ff2b29570ca9b3e20",
+			"targetIndex" : 22,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 14,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_stacktrace_addr2line-1.83.0",
+			"exportName" : "boost_stacktrace_addr2line-targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "boost_stacktrace_addr2line::@700ff2b29570ca9b3e20",
+					"index" : 22
+				}
+			],
+			"paths" : 
+			[
+				"libs/stacktrace/CMakeFiles/Export/0823ef3330cf976054bc0d9873695f26/boost_stacktrace_addr2line-targets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 15,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_stacktrace_addr2line-1.83.0",
+			"paths" : 
+			[
+				"build/libs/stacktrace/tmpinst/boost_stacktrace_addr2line-config.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 16,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_stacktrace_addr2line-1.83.0",
+			"paths" : 
+			[
+				"build/libs/stacktrace/tmpinst/boost_stacktrace_addr2line-config-version.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 19,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				{
+					"from" : "libs/stacktrace/include",
+					"to" : "."
+				}
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 21,
+			"component" : "Unspecified",
+			"destination" : "lib64",
+			"paths" : 
+			[
+				"stage/lib/libboost_stacktrace_basic.a"
+			],
+			"targetId" : "boost_stacktrace_basic::@700ff2b29570ca9b3e20",
+			"targetIndex" : 23,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 22,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_stacktrace_basic-1.83.0",
+			"exportName" : "boost_stacktrace_basic-targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "boost_stacktrace_basic::@700ff2b29570ca9b3e20",
+					"index" : 23
+				}
+			],
+			"paths" : 
+			[
+				"libs/stacktrace/CMakeFiles/Export/0d9014ac801d62cdbe17ae3702b1822f/boost_stacktrace_basic-targets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 23,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_stacktrace_basic-1.83.0",
+			"paths" : 
+			[
+				"build/libs/stacktrace/tmpinst/boost_stacktrace_basic-config.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 24,
+			"component" : "Unspecified",
+			"destination" : "lib64/cmake/boost_stacktrace_basic-1.83.0",
+			"paths" : 
+			[
+				"build/libs/stacktrace/tmpinst/boost_stacktrace_basic-config-version.cmake"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "libs/stacktrace",
+		"source" : "libs/stacktrace"
+	}
+}
