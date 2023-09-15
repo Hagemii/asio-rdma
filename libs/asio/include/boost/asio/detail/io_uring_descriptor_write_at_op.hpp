@@ -173,6 +173,12 @@ public:
       w.complete(handler, handler.handler_);
       BOOST_ASIO_HANDLER_INVOCATION_END;
     }
+
+//     在这段代码中，﻿ptr p 主要的作用是管理和维护 ﻿o->handler_ 对象的生命周期和资源。
+// 当创建 ﻿ptr p 的时候，它接收了 ﻿o->handler_ 的地址，并关联了 ﻿o 这个 ﻿op 对象。一旦 ﻿p 被创建，实际上它就开始管理原始的 ﻿o->handler_ 这个 handler 对象的内存。这是因为 ﻿p.p 和/或 ﻿p.v 会被设置为 ﻿o 对象的地址，由 ﻿p 对象对其进行管理。
+// 然后，代码创建了一个新的 handler 对象，这个新对象也绑定了 ﻿o->handler_ 的信息，并改变了 ﻿p.h 的指向，使其指向新创建的 handler 对象。
+// 在调用 ﻿p.reset() 时，原始的 ﻿o->handler_ 相关的内存会被立即释放。其中，﻿p.p 或者 ﻿p.v 这部分由 ﻿p 管理的内存会被释放。然而新创建的 handler 对象，由于是在栈上创建的，它的生命周期会持续到函数结束。这就是 ﻿p.reset() 执行后并没有立即使用 ﻿p 的原因。
+// 之所以如此设计，主要目的是确保即便在原始的 ﻿o->handler_ 对象的资源被释放之后，仍可以安全地访问和调用新创建的 handler 对象。这在多线程或异步场景是非常重要的，并可能避免潜在的内存错误或竞态条件。
   }
 
 private:

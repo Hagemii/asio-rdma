@@ -258,6 +258,7 @@ void io_uring_service::start_op(int op_type,
     io_uring_service::per_io_object_data& io_obj,
     io_uring_operation* op, bool is_continuation)
 {
+   // 如果io_obj对象为空，则设置错误码为bad_descriptor并返回
   if (!io_obj)
   {
     op->ec_ = boost::asio::error::bad_descriptor;
@@ -267,6 +268,7 @@ void io_uring_service::start_op(int op_type,
 
   mutex::scoped_lock io_object_lock(io_obj->mutex_);
 
+// 如果io_obj标记为已经shutdown，则解锁并立即完成操作
   if (io_obj->shutdown_)
   {
     io_object_lock.unlock();
@@ -274,8 +276,10 @@ void io_uring_service::start_op(int op_type,
     return;
   }
 
+  // 如果当前类型的操作队列为空
   if (io_obj->queues_[op_type].op_queue_.empty())
   {
+    // 尝试执行操作，如果操作已完成，则解锁并调度立即完成
     if (op->perform(false))
     {
       io_object_lock.unlock();
@@ -283,18 +287,21 @@ void io_uring_service::start_op(int op_type,
     }
     else
     {
+      // 如果操作还没执行完,把操作添加进对应的队列，并准备io_uring的提交队列
       io_obj->queues_[op_type].op_queue_.push(op);
       io_object_lock.unlock();
       mutex::scoped_lock lock(mutex_);
       if (::io_uring_sqe* sqe = get_sqe())
       {
+        // 如果获取成功，说明可以提交更多的操作请求
         op->prepare(sqe);
         ::io_uring_sqe_set_data(sqe, &io_obj->queues_[op_type]);
         scheduler_.work_started();
-        post_submit_sqes_op(lock);
+        post_submit_sqes_op(lock);//提交准备好的操作，让内核开始进行IO处理。
       }
       else
       {
+        // 如果获取不到提交队列的空间，解锁并设置错误结果为-ENOBUFS，然后调度立即完成操作
         lock.unlock();
         io_obj->queues_[op_type].set_result(-ENOBUFS);
         post_immediate_completion(&io_obj->queues_[op_type], is_continuation);
@@ -726,11 +733,12 @@ void io_uring_service::submit_sqes()
 void io_uring_service::post_submit_sqes_op(mutex::scoped_lock& lock)
 {
   if (pending_sqes_ >= submit_batch_size)
-  {
+  {//如果准备好的队列项数量（即 ﻿pending_sqes_）已达到提交批处理的大小（即 ﻿submit_batch_size），就调用 ﻿submit_sqes() 函数立即提交操作。这种情况可能发生在大量操作积压等待提交时。
     submit_sqes();
   }
   else if (pending_sqes_ != 0 && !pending_submit_sqes_op_)
-  {
+  {// 如果准备好的队列项数量不为零，且没有等待提交的操作（即 ﻿pending_submit_sqes_op_ 为 false），那么就将 ﻿pending_submit_sqes_op_ 标志设为 true，并为 ﻿submit_sqes_op_ 操作设置为立即完成。这种情况可能发生在一些准备就绪的操作尚未达到批量提交的规模，但你仍希望尽快提交这些操作。
+
     pending_submit_sqes_op_ = true;
     lock.unlock();
     scheduler_.post_immediate_completion(&submit_sqes_op_, false);

@@ -17,6 +17,7 @@
 # pragma once
 #endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
+#include "asio/rdma_connection.hpp"
 #include <boost/asio/any_completion_executor.hpp>
 #include <boost/asio/any_completion_handler.hpp>
 #include <boost/asio/any_io_executor.hpp>
