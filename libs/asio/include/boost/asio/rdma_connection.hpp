@@ -102,10 +102,26 @@ namespace boost
             void send_test(Handler &handler)
             {
                 boost::system::error_code ec;
-                impl_.get_service().send(impl_.get_implementation(),
+                impl_.get_service().rdma_write(impl_.get_implementation(),
                                          ec,
                                          handler,
                                          impl_.get_executor());
+            }
+            template <typename Handler>
+            void test2(Handler &handler)
+            {
+                struct options_test
+                {
+                    /* data */
+                };
+                options_test k;
+
+                boost::system::error_code ec;
+                impl_.get_service().test2(impl_.get_implementation(),
+                                          k,
+                                          ec,
+                                          handler,
+                                          impl_.get_executor());
             }
         };
     }

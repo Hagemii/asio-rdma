@@ -1,6 +1,7 @@
 #include <iostream>
 #include "libs/asio/include/boost/asio.hpp"
-
+#include <chrono>
+#include <thread>
 void print(const boost::system::error_code & /*e*/)
 {
     std::cout << "Hello, world! ";
@@ -34,15 +35,26 @@ int main()
 
     boost::asio::io_context io;
     boost::asio::rdma_connection<MyPortSpace> rdma(io);
+    boost::asio::io_context::work worker(io);
+
     rdma.init_rdma_client("195.168.1.111");
 
     // rdma.send_test(handler);
     rdma.test1(handler);
 
     rdma.send_test(handler);
+
+
     rdma.send_test(handler);
-    io.run();
 
 
+    std::thread thread([&](){ io.run(); });
+
+std::this_thread::sleep_for(std::chrono::seconds(5));
+    rdma.send_test(handler);
+    rdma.test1(handler);
+
+ 
+thread.join();  
     return 0;
 }
