@@ -80,33 +80,57 @@ namespace boost
                 options_test k;
 
                 boost::system::error_code ec;
-                impl_.get_service().test(impl_.get_implementation(),
+                impl_.get_service().poll_cq(impl_.get_implementation(),
                                          k,
                                          ec,
                                          handler,
                                          impl_.get_executor());
             }
 
-            void init_rdma_server()
+            // 初始化rdma服务端，并获得可写入的内存地址
+            void init_rdma_server(char *&bufAddress)
             {
                 boost::system::error_code ec;
                 impl_.get_service().create_rdma_core(impl_.get_implementation(), NULL, ec);
+                bufAddress = impl_.get_service().get_buf(impl_.get_implementation());
             }
-            void init_rdma_client(char *servername)
+            void init_rdma_client(char *servername, char *&bufAddress)
             {
                 boost::system::error_code ec;
                 impl_.get_service().create_rdma_core(impl_.get_implementation(), servername, ec);
+                bufAddress = impl_.get_service().get_buf(impl_.get_implementation());
             }
 
             template <typename Handler>
             void send_test(Handler &handler)
             {
                 boost::system::error_code ec;
-                impl_.get_service().rdma_write(impl_.get_implementation(),
+                impl_.get_service().send(impl_.get_implementation(),
                                          ec,
                                          handler,
                                          impl_.get_executor());
             }
+
+            template <typename Handler>
+            void write_test(Handler &handler)
+            {
+                boost::system::error_code ec;
+                impl_.get_service().rdma_write(impl_.get_implementation(),
+                                               ec,
+                                               handler,
+                                               impl_.get_executor());
+            }
+
+            template <typename Handler>
+            void read_test(Handler &handler)
+            {
+                boost::system::error_code ec;
+                impl_.get_service().rdma_read(impl_.get_implementation(),
+                                               ec,
+                                               handler,
+                                               impl_.get_executor());
+            }
+
             template <typename Handler>
             void test2(Handler &handler)
             {

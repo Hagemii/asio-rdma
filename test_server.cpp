@@ -31,7 +31,6 @@ int main()
         {
             std::cerr << "Lambda handler: Async operation failed with error: " << ec.message() << std::endl;
         }
-       free(wcs_);
     };
 
     boost::asio::io_context io;
@@ -39,17 +38,11 @@ int main()
     boost::asio::io_context::work worker(io);
     char* buf;
 
-    rdma.init_rdma_client("195.168.1.111",buf);
+    rdma.init_rdma_server(buf);
 
     // rdma.send_test(handler);
     rdma.test1(handler);
-
-    memset(buf, 0x7c, 1024);
-
-    rdma.write_test(handler);
-    rdma.read_test(handler);
-
-   
+  
 
  //   rdma.send_test(handler);
 
@@ -57,10 +50,7 @@ int main()
     std::thread thread([&](){ io.run(); });
  //   std::cout<<buf<< std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(5));
-    
-    rdma.send_test(handler);
-    rdma.test1(handler);
-
+  
  
 thread.join();  
     return 0;

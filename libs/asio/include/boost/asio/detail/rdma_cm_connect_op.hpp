@@ -80,11 +80,21 @@ namespace boost
                         ne = ibv_poll_cq(o->cq_, 1, wcs_);
                         if (ne)
                         {
-                            if (wcs_[0].wr_id == 123123)
+                            if (wcs_[0].opcode == IBV_WC_SEND)
                             {
-                                std::cout << "connect success perform" << std::endl;
+                                std::cout << "SEND success" << std::endl;
+                            }else if(wcs_[0].opcode == IBV_WC_RDMA_READ){
+                                std::cout << "READ success" << std::endl;
+                            }else if(wcs_[0].opcode == IBV_WC_RDMA_WRITE){
+                                std::cout << "WRITE success" << std::endl;
+                            }else if(wcs_[0].opcode == IBV_WC_RECV){
+                                std::cout << "RECV success" << std::endl;
                             }
-                            ibv_ack_cq_events(o->cq_, 1);
+                            else
+                            {
+                                std::cout << "opcode: " << wcs_[0].opcode << std::endl;
+                            }
+                            o->wcs_[num] = wcs_[0];
                             num += ne;
                         }
                         else
@@ -92,18 +102,16 @@ namespace boost
                             break;
                         }
                     }
-
-                    std::cout << "complete " << num;
+                    o->bytes_transferred_ = num;
+                    ibv_ack_cq_events(o->cq_, num);
 
                     std::ofstream file("output.txt", std::ofstream::app); // 追加写入模式
                     if (!file)
                     {
                         std::cerr << "Couldn't open file." << std::endl;
-                        
                     }
                     file << "perform " << num << std::endl;
 
-                    std::cout << "perform " << num;
                     return done;
                 }
 
@@ -117,6 +125,7 @@ namespace boost
                         static_cast<rdma_cm_connect_op *>(base));
 
                     ptr p = {boost::asio::detail::addressof(o->handler_), o, o};
+                    BOOST_ASIO_HANDLER_COMPLETION((*o));
 
                     // Take ownership of the operation's outstanding work.
                     handler_work<Handler, IoExecutor> w(
@@ -131,53 +140,26 @@ namespace boost
                     // with the handler. Consequently, a local copy of the handler is required
                     // to ensure that any owning sub-object remains valid until after we have
                     // deallocated the memory here.
-                    detail::binder2<Handler, boost::system::error_code, std::size_t>
-                        handler(o->handler_, o->ec_, o->bytes_transferred_);
+                    detail::binder3<Handler, boost::system::error_code, std::size_t, ibv_wc*>
+                        handler(o->handler_, o->ec_, o->bytes_transferred_, o->wcs_);
                     p.h = boost::asio::detail::addressof(handler.handler_);
                     p.reset();
 
-                    // // Make the upcall if required.
-                    // if (owner)
-                    // {
-                    //     fenced_block b(fenced_block::half);
-                    //     BOOST_ASIO_HANDLER_INVOCATION_BEGIN((handler.arg1_, handler.arg2_));
-                    //     w.complete(handler, handler.handler_);
-                    //     BOOST_ASIO_HANDLER_INVOCATION_END;
-                    // }
-
-                    ibv_wc wcs_[1];
-                    // int ne = ibv_poll_cq(o->cq_, 2, wcs_);
-                    int ne;
-                    int num = 0;
-
-                    for (;;)
+                    // Make the upcall if required.
+                    if (owner)
                     {
-                        // 读取一个CQE
-                        ne = ibv_poll_cq(o->cq_, 1, wcs_);
-                        if (ne)
-                        {
-                            if (wcs_[0].wr_id == 123123)
-                            {
-                                std::cout << "connect success" << std::endl;
-                            }
-                            ibv_ack_cq_events(o->cq_, 1);
-                            num += ne;
-                        }
-                        else
-                        {
-                            break;
-                        }
+                        fenced_block b(fenced_block::half);
+                        BOOST_ASIO_HANDLER_INVOCATION_BEGIN((handler.arg1_, handler.arg2_));
+                        w.complete(handler, handler.handler_);
+                        BOOST_ASIO_HANDLER_INVOCATION_END;
                     }
-
-                    std::cout << "complete " << num;
 
                     std::ofstream file("output.txt", std::ofstream::app); // 追加写入模式
                     if (!file)
                     {
                         std::cerr << "Couldn't open file." << std::endl;
-                        return ;
                     }
-                    file << "complete " << num << std::endl;
+                    file << "complete " << std::endl;
                     // TODO ... do your io completion logic
                 }
 

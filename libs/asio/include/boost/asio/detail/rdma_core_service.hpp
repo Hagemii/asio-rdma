@@ -42,7 +42,7 @@ int use_ts = 0;
 int use_odp = 0;
 int implicit_odp = 0;
 int use_new_send = 0;
-uint64_t buf_addr;
+
 namespace boost
 {
     namespace asio
@@ -74,6 +74,7 @@ namespace boost
                 uint64_t completion_timestamp_mask;
 
                 struct pingpong_dest *rem_dest;
+                uint64_t buf_addr;
                 struct pingpong_dest *my_dest;
             };
 
@@ -98,7 +99,7 @@ namespace boost
                     struct rdma_context *ctx;
 
                     int channel_dev_fd;
-
+                    
                     // Per-descriptor data used by the reactor.
                     reactor::per_descriptor_data reactor_data_;
                 };
@@ -226,7 +227,6 @@ namespace boost
                                              .ai_socktype = SOCK_STREAM};
                     char *service;
                     char msg[sizeof "0000:000000:000000:00000000:0000000000000000:00000000000000000000000000000000"];
-                    char msg2[sizeof "00000000:0000000000000000"];
                     int n;
                     int sockfd = -1;
                     struct pingpong_dest *rem_dest = NULL;
@@ -289,18 +289,8 @@ namespace boost
                         goto out;
 
                     sscanf(msg, "%x:%x:%x:%x:%016llx:%s", &rem_dest->lid, &rem_dest->qpn,
-                           &rem_dest->psn, &ctx->mr->rkey, &buf_addr, gid);
+                           &rem_dest->psn, &ctx->mr->rkey, &ctx->buf_addr, gid);
                     wire_gid_to_gid(gid, &rem_dest->gid);
-
-                    // if (read(sockfd, msg2, sizeof msg2) != sizeof msg2 ||
-                    //     write(sockfd, "done", sizeof "done") != sizeof "done")
-                    // {
-                    //     perror("client read/write");
-                    //     fprintf(stderr, "Couldn't read/write remote address\n");
-                    //     goto out;
-                    // }
-
-                    // sscanf(msg2, "%x:%016llx", &ctx->mr->rkey, &buf_addr);
 
                 out:
                     close(sockfd);
@@ -319,7 +309,7 @@ namespace boost
                         .ai_family = AF_UNSPEC,
                         .ai_socktype = SOCK_STREAM};
                     char *service;
-                    char msg[sizeof "0000:000000:000000:00000000000000000000000000000000"];
+                    char msg[sizeof "0000:000000:000000:00000000:0000000000000000:00000000000000000000000000000000"];
                     int n;
                     int sockfd = -1, connfd;
                     struct pingpong_dest *rem_dest = NULL;
@@ -384,8 +374,8 @@ namespace boost
                     if (!rem_dest)
                         goto out;
 
-                    sscanf(msg, "%x:%x:%x:%s", &rem_dest->lid, &rem_dest->qpn,
-                           &rem_dest->psn, gid);
+                    sscanf(msg, "%x:%x:%x:%x:%016llx:%s", &rem_dest->lid, &rem_dest->qpn,
+                           &rem_dest->psn, &ctx->mr->rkey, &ctx->buf_addr, gid);
                     wire_gid_to_gid(gid, &rem_dest->gid);
 
                     if (pp_connect_ctx(ctx, ib_port, my_dest->psn, mtu, sl, rem_dest,
@@ -398,8 +388,9 @@ namespace boost
                     }
 
                     gid_to_wire_gid(&my_dest->gid, gid);
-                    sprintf(msg, "%04x:%06x:%06x:%s:%08x:%p", my_dest->lid, my_dest->qpn,
-                            my_dest->psn, gid, ctx->mr->lkey, static_cast<void *>(ctx->buf));
+                    sprintf(msg, "%04x:%06x:%06x:%08x:%016llx:%s", my_dest->lid,
+                            my_dest->qpn, my_dest->psn, ctx->mr->lkey,
+                            (unsigned long long)(uintptr_t)ctx->buf, gid);
 
                     if (write(connfd, msg, sizeof msg) != sizeof msg ||
                         read(connfd, msg, sizeof msg) != sizeof "done")
@@ -418,7 +409,7 @@ namespace boost
                 // 初始化本地网卡设置
                 static struct rdma_context *init_ctx(struct ibv_device *ib_dev,
                                                      uint32_t rx_depth, uint8_t port,
-                                                     int use_event)
+                                                     int use_event, int size)
                 {
                     struct rdma_context *ctx;
                     // 定义网络适配器访问权限，允许在本地对缓冲区进行写操作
@@ -428,14 +419,12 @@ namespace boost
                     if (!ctx)
                         return NULL;
 
-                    int size = 1024;
+                    // 设置需要注册的内存区域大小
                     ctx->size = size;
                     ctx->send_flags = IBV_SEND_SIGNALED;
                     ctx->rx_depth = rx_depth;
                     int flags;
-
                     ctx->buf = new char[size];
-
                     if (!ctx->buf)
                     {
                         fprintf(stderr, "Couldn't allocate work buf.\n");
@@ -552,7 +541,9 @@ namespace boost
                     { // 否则，根据是否使用DM进行内存区域的注册
                         ctx->mr = use_dm ? ibv_reg_dm_mr(ctx->pd, ctx->dm, 0,
                                                          size, access_flags)
-                                         : ibv_reg_mr(ctx->pd, ctx->buf, size, access_flags);
+                                         : ibv_reg_mr(ctx->pd, ctx->buf, size, IBV_ACCESS_LOCAL_WRITE |
+						      IBV_ACCESS_REMOTE_WRITE |
+						      IBV_ACCESS_REMOTE_READ);
                     }
 
                     if (!ctx->mr)
@@ -748,10 +739,8 @@ namespace boost
                     }
                 }
 
-                static int pp_post_write(struct rdma_context *ctx)
+                static int pp_post_write(struct rdma_context *ctx, int offset)
                 {
-                    char *buf = new char[1024];
-                    memset(buf, 0x7c, 1024);
 
                     struct ibv_sge list = {
                         .addr = (uintptr_t)ctx->buf,
@@ -765,7 +754,7 @@ namespace boost
                         .send_flags = ctx->send_flags,
 
                     };
-                    wr.wr.rdma.remote_addr = (uintptr_t)buf_addr + 100;
+                    wr.wr.rdma.remote_addr = (uintptr_t)ctx->buf_addr + offset;
                     wr.wr.rdma.rkey = ctx->mr->rkey;
                     struct ibv_send_wr *bad_wr;
 
@@ -787,17 +776,54 @@ namespace boost
                     }
                 }
 
+                static int pp_post_read(struct rdma_context *ctx, int offset)
+                {
+
+                    struct ibv_sge list = {
+                        .addr = (uintptr_t)ctx->buf,
+                        .length = 1024,
+                        .lkey = ctx->mr->lkey};
+                    struct ibv_send_wr wr = {
+                        .wr_id = 123124,
+                        .sg_list = &list,
+                        .num_sge = 1,
+                        .opcode = IBV_WR_RDMA_READ,
+                        .send_flags = ctx->send_flags,
+
+                    };
+                    wr.wr.rdma.remote_addr = (uintptr_t)ctx->buf_addr + offset;
+                    wr.wr.rdma.rkey = ctx->mr->rkey;
+                    struct ibv_send_wr *bad_wr;
+
+                    if (use_new_send)
+                    {
+                        ibv_wr_start(ctx->qpx);
+
+                        ctx->qpx->wr_id = PINGPONG_SEND_WRID;
+                        ctx->qpx->wr_flags = ctx->send_flags;
+
+                        ibv_wr_send(ctx->qpx);
+                        ibv_wr_set_sge(ctx->qpx, list.lkey, list.addr, list.length);
+
+                        return ibv_wr_complete(ctx->qpx);
+                    }
+                    else
+                    {
+                        return ibv_post_send(ctx->qp, &wr, &bad_wr);
+                    }
+                }
                 void
                 create_rdma_core(implementation_type &impl, const char *servername, boost::system::error_code &ec)
                 {
                     struct ibv_device *ib_dev;
 
                     // unsigned int size = 4096;
+                    int size = 1024;
                     uint32_t rx_depth = 50;
                     unsigned int port = 12345;
                     uint8_t ib_port = 1;
                     int use_event = 1;
-                    int gidx = strtol("1", NULL, 0);
+                    int gidx = 1;
                     char gid[33];
                     srand48(getpid() * time(NULL));
 
@@ -833,7 +859,7 @@ namespace boost
                         }
                     }
 
-                    impl.ctx = init_ctx(ib_dev, rx_depth, ib_port, use_event);
+                    impl.ctx = init_ctx(ib_dev, rx_depth, ib_port, use_event, size);
                     impl.channel_dev_fd = impl.ctx->channel->fd;
                     ibv_req_notify_cq(pp_cq(impl.ctx), 0);
 
@@ -907,6 +933,12 @@ namespace boost
                             return;
                 }
 
+                // 获得内存区域的地址
+                char *get_buf(implementation_type &impl)
+                {
+                    return impl.ctx->buf;
+                }
+
                 // Start the asynchronous operation for handlers that are specialised for
                 // immediate completion.
                 template <typename Op>
@@ -962,8 +994,6 @@ namespace boost
                                                Handler &handler,
                                                const IoExecutor &io_ex)
                 {
-                    int size = 1024;
-                    char *buf = new char[size];
 
                     impl.ctx->pending = PINGPONG_RECV_WRID;
 
@@ -973,43 +1003,6 @@ namespace boost
                         return ec;
                     }
                     impl.ctx->pending |= PINGPONG_SEND_WRID;
-
-                    // struct ibv_cq *ev_cq;
-                    // void *ev_ctx;
-
-                    // if (ibv_get_cq_event(impl.ctx->channel, &ev_cq, &ev_ctx))
-                    // {
-                    //     fprintf(stderr, "Failed to get cq_event\n");
-                    // }
-
-                    // if (ev_cq != pp_cq(impl.ctx))
-                    // {
-                    //     fprintf(stderr, "CQ event for unknown CQ %p\n", ev_cq);
-                    // }
-
-                    // if (ibv_req_notify_cq(pp_cq(impl.ctx), 0))
-                    // {
-                    //     fprintf(stderr, "Couldn't request CQ notification\n");
-                    // }
-
-                    // int ne = 0;
-                    // int num = 0;
-                    // ibv_wc wcs_[1];
-                    // for (;;)
-                    // {
-                    //     // 读取一个CQE
-                    //     ne = ibv_poll_cq(impl.ctx->cq_s.cq, 1, wcs_);
-                    //     if (ne)
-                    //     {
-
-                    //         ibv_ack_cq_events(impl.ctx->cq_s.cq, 1);
-                    //         num += 1;
-                    //     }
-                    //     else
-                    //     {
-                    //         break;
-                    //     }
-                    // }
 
                     return ec;
                 }
@@ -1022,7 +1015,24 @@ namespace boost
                 {
                     impl.ctx->pending = PINGPONG_RECV_WRID;
 
-                    if (pp_post_write(impl.ctx))
+                    if (pp_post_write(impl.ctx, 0))
+                    {
+                        fprintf(stderr, "Couldn't post write\n");
+                        return ec;
+                    }
+                    impl.ctx->pending |= PINGPONG_SEND_WRID;
+                    return ec;
+                }
+
+                template <typename Handler, typename IoExecutor>
+                boost::system::error_code rdma_read(implementation_type &impl,
+                                                    boost::system::error_code &ec,
+                                                    Handler &handler,
+                                                    const IoExecutor &io_ex)
+                {
+                    impl.ctx->pending = PINGPONG_RECV_WRID;
+
+                    if (pp_post_read(impl.ctx, 0))
                     {
                         fprintf(stderr, "Couldn't post write\n");
                         return ec;
@@ -1033,14 +1043,13 @@ namespace boost
 
                 // Set a socket option.
                 template <typename Option, typename Handler, typename IoExecutor>
-                boost::system::error_code test(implementation_type &impl,
-                                               Option &option, boost::system::error_code &ec,
-                                               Handler &handler,
-                                               const IoExecutor &io_ex)
+                boost::system::error_code poll_cq(implementation_type &impl,
+                                                  Option &option, boost::system::error_code &ec,
+                                                  Handler &handler,
+                                                  const IoExecutor &io_ex)
                 {
-                    std::cout << "ok";
-                    ibv_wc wcs[2];
 
+                    ibv_wc *wcs = new ibv_wc;
                     bool is_continuation =
                         boost_asio_handler_cont_helpers::is_continuation(handler);
 
@@ -1058,55 +1067,6 @@ namespace boost
                     p.v = p.p = 0;
 
                     return ec;
-                }
-
-                template <typename Option, typename Handler, typename IoExecutor>
-                boost::system::error_code test2(implementation_type &impl,
-                                                Option &option, boost::system::error_code &ec,
-                                                Handler &handler,
-                                                const IoExecutor &io_ex)
-                {
-                    struct ibv_cq *ev_cq;
-                    void *ev_ctx;
-
-                    if (ibv_get_cq_event(impl.ctx->channel, &ev_cq, &ev_ctx))
-                    {
-                        fprintf(stderr, "Failed to get cq_event\n");
-                        
-                    }
-
-                    if (ev_cq != pp_cq(impl.ctx))
-                    {
-                        fprintf(stderr, "CQ event for unknown CQ %p\n",
-                                ev_cq);
-                        
-                    }
-
-                    if (ibv_req_notify_cq(pp_cq(impl.ctx), 0))
-                    {
-                        fprintf(stderr,
-                                "Couldn't request CQ notification\n");
-                        
-                    }
-                    int ne = 0;
-                    int num = 0;
-                    ibv_wc wcs_[1];
-                    for (;;)
-                    {
-                        // 读取一个CQE
-                        ne = ibv_poll_cq(impl.ctx->cq_s.cq, 1, wcs_);
-                        if (ne)
-                        {
-
-                            ibv_ack_cq_events(impl.ctx->cq_s.cq, 1);
-                            num += 1;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                     return ec;
                 }
             };
         }
